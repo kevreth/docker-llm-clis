@@ -1,0 +1,55 @@
+services:
+  kev-labs:
+
+    entrypoint: ["/bin/bash"]
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+      args:
+        - NODE_IMAGE
+        - YARN_VERSION
+
+    user: 1000:1000
+
+    container_name: kev-labs
+
+    volumes:
+      - workspace:/workspace
+      - artifacts:/artifacts
+      - ${SSH_AUTH_SOCK}:/ssh-agent
+      - ./aliases.sh:/etc/profile.d/aliases.sh:ro
+      - ${KEV_LABS}:/workspace/kev-labs
+
+    working_dir: /workspace
+
+    environment:
+      GH_TOKEN: ${GH_TOKEN}
+      HOME: /home/node
+      SSH_AUTH_SOCK: /ssh-agent
+      TMPDIR: /workspace/.tmp
+      SHELL: /bin/bash
+      GIT_SSH_COMMAND: ssh -o UserKnownHostsFile=/home/node/.ssh/known_hosts -o IdentityAgent=/ssh-agent
+
+    stdin_open: true
+    tty: true
+    init: true
+
+    cap_drop:
+      - ALL
+
+    security_opt:
+      - no-new-privileges:false
+
+    cap_add:
+    - SETUID
+    - SETGID
+    - NET_RAW
+    - NET_ADMIN
+
+    tmpfs:
+      - /tmp
+      - /run
+
+volumes:
+  workspace:
+  artifacts:
