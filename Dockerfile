@@ -1,7 +1,10 @@
 ARG NODE_IMAGE=node:24.4.1-bookworm-slim
 FROM ${NODE_IMAGE}
+
+ARG CONTAINER_USER=llm
+
 ENV DEBIAN_FRONTEND=noninteractive
-ENV PATH="/home/node/.local/bin:$PATH"
+ENV PATH="/home/${CONTAINER_USER}/.local/bin:$PATH"
 ARG YARN_VERSION=4.14.1
 ENV YARN_VERSION=${YARN_VERSION}
 COPY artiary/artifacts/manifest/versions.yml /tmp/versions.yml
@@ -15,12 +18,15 @@ RUN for f in /tmp/npm/*.tgz; do tar xzf "$f" -C /opt; done && rm -rf /tmp/npm
 ENV PATH="/opt/npm-global/bin:$PATH"
 
 USER root
-COPY --chown=node:node artiary/artifacts/builders/ /tmp/builders/
-COPY --chown=node:node artiary/artifacts/scripts/ /tmp/scripts/
+RUN usermod -l ${CONTAINER_USER} node && \
+    groupmod -n ${CONTAINER_USER} node && \
+    usermod -d /home/${CONTAINER_USER} -m ${CONTAINER_USER}
+COPY --chown=${CONTAINER_USER}:${CONTAINER_USER} artiary/artifacts/builders/ /tmp/builders/
+COPY --chown=${CONTAINER_USER}:${CONTAINER_USER} artiary/artifacts/scripts/ /tmp/scripts/
 
 ENV UV_PYTHON_PREFERENCE=only-system
 
-USER node
+USER ${CONTAINER_USER}
 RUN mkdir -p "$HOME/.local/bin" && \
     awk '/^scripts:$/{f=1;next} f&&/^  [a-z]/&&!/^    /{if(name&&ver&&!hb&&url!="")print name"\t"ver"\t"url; name=substr($0,3);sub(/:$/,"",name);ver="";url="";hb=0;next} f&&name&&/^    version:/{ver=$2;gsub(/"/,"",ver);next} f&&name&&/^    url:/{url=$2;gsub(/"/,"",url);next} f&&name&&/^    build:/{hb=1;next} f&&/^[a-zA-Z]/{if(name&&ver&&!hb&&url!="")print name"\t"ver"\t"url;exit} END{if(f&&name&&ver&&!hb&&url!="")print name"\t"ver"\t"url}' /tmp/versions.yml \
     | while read -r entry; do \
@@ -51,14 +57,22 @@ RUN awk '/^scripts:$/{f=1;next} f&&/^  [a-z]/&&!/^    /{if(name&&art)print name"
     rm -rf /tmp/builders
 
 USER root
-RUN mkdir -p /workspace /artifacts /home/node/.ssh
-RUN chown -R node:node /workspace /artifacts /home/node
-RUN echo 'export PATH="$HOME/.local/bin:$PATH"' >> /home/node/.bashrc
-RUN usermod -aG sudo node
+RUN mkdir -p /workspace /artifacts /home/${CONTAINER_USER}/.ssh
+RUN chown -R ${CONTAINER_USER}:${CONTAINER_USER} /workspace /artifacts /home/${CONTAINER_USER}
+RUN echo 'export PATH="$HOME/.local/bin:$PATH"' >> /home/${CONTAINER_USER}/.bashrc
+RUN usermod -aG sudo ${CONTAINER_USER}
 RUN mkdir -p /etc/sudoers.d && \
-    echo "node ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/node && chmod 0440 /etc/sudoers.d/node
+    echo "${CONTAINER_USER} ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/${CONTAINER_USER} && chmod 0440 /etc/sudoers.d/${CONTAINER_USER}
 RUN sed -i 's/^Defaults.*requiretty/# Defaults requiretty/' /etc/sudoers || true
 RUN echo "Defaults !audit" > /etc/sudoers.d/no-audit && chmod 0440 /etc/sudoers.d/no-audit
+COPY docker/aliases.sh /etc/profile.d/aliases.sh
+COPY docker/motd /etc/motd
 RUN echo "source /etc/profile.d/aliases.sh" >> /etc/bash.bashrc
-RUN echo "source /etc/profile.d/aliases.sh" >> /home/node/.bashrc && \
+RUN echo "source /etc/profile.d/aliases.sh" >> /home/${CONTAINER_USER}/.bashrc && \
+    echo "cat /etc/motd" >> /home/${CONTAINER_USER}/.bashrc && \
     rm /tmp/versions.yml
+RUN cp -a /home/${CONTAINER_USER}/. /home/${CONTAINER_USER}.seed/
+COPY docker/entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+CMD ["/bin/bash", "-l"]

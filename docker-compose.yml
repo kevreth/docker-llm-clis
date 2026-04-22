@@ -1,7 +1,8 @@
 services:
-  kev-labs:
+  docker-llm-cli:
 
-    entrypoint: ["/bin/bash"]
+    image: docker-llm-cli
+
     build:
       context: ..
       dockerfile: docker/Dockerfile
@@ -11,24 +12,23 @@ services:
 
     user: 1000:1000
 
-    container_name: kev-labs
+    container_name: docker-llm-cli
 
     volumes:
-      - workspace:/workspace
-      - artifacts:/artifacts
+      - ${WORKSPACE_DIR:?WORKSPACE_DIR must be set}:/workspace
+      - docker-llm-cli-artifacts:/artifacts
+      - docker-llm-cli-home:/home/llm
       - ${SSH_AUTH_SOCK}:/ssh-agent
-      - ./aliases.sh:/etc/profile.d/aliases.sh:ro
-      - ${KEV_LABS}:/workspace/kev-labs
 
     working_dir: /workspace
 
     environment:
       GH_TOKEN: ${GH_TOKEN}
-      HOME: /home/node
+      HOME: /home/llm
       SSH_AUTH_SOCK: /ssh-agent
       TMPDIR: /workspace/.tmp
       SHELL: /bin/bash
-      GIT_SSH_COMMAND: ssh -o UserKnownHostsFile=/home/node/.ssh/known_hosts -o IdentityAgent=/ssh-agent
+      GIT_SSH_COMMAND: ssh -o UserKnownHostsFile=/home/llm/.ssh/known_hosts -o IdentityAgent=/ssh-agent
 
     stdin_open: true
     tty: true
@@ -51,5 +51,5 @@ services:
       - /run
 
 volumes:
-  workspace:
-  artifacts:
+  docker-llm-cli-artifacts:
+  docker-llm-cli-home:
