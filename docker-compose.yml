@@ -4,11 +4,16 @@ services:
     image: docker-llm-cli
 
     build:
-      context: ..
-      dockerfile: docker/Dockerfile
+      context: .
+      dockerfile: ${DOCKERFILE:-Dockerfile}
       args:
         - NODE_IMAGE
         - YARN_VERSION
+        - CLAUDE_VERSION
+        - YARN_SCRIPT_VERSION
+        - COPILOT_VERSION
+        - KIMI_VERSION
+        - MISTRAL_VERSION
 
     user: 1000:1000
 
@@ -29,6 +34,7 @@ services:
       TMPDIR: /workspace/.tmp
       SHELL: /bin/bash
       GIT_SSH_COMMAND: ssh -o UserKnownHostsFile=/home/llm/.ssh/known_hosts -o IdentityAgent=/ssh-agent
+      TERM: xterm-256color
 
     stdin_open: true
     tty: true

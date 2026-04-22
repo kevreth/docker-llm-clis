@@ -10,12 +10,43 @@
 
 | File | Purpose |
 |------|---------|
-| `Dockerfile` | Builds the image using `node:bookworm-slim` base; Linux user renamed to `llm` via `CONTAINER_USER` ARG |
-| `docker-compose.yml` | Compose service for local developer builds; reads `WORKSPACE_DIR` from environment |
+| `Dockerfile` | Online build — self-contained, fetches all dependencies from the internet (default for DockerHub/CI) |
+| `Dockerfile.offline` | Offline build — uses pre-fetched artifacts staged into `docker/artifacts/` (air-gapped/reproducible) |
+| `docker-compose.yml` | Compose service for local builds; self-contained build context |
 | `run.sh` | End-user wrapper script; sources `docker-llm-cli.env` and calls `docker run` |
 | `docker-llm-cli.env.example` | Template env file — copy to `docker-llm-cli.env`, fill in values, `chmod 600` |
 | `aliases.sh` | Shell aliases baked into the image at `/etc/profile.d/aliases.sh` |
 | `Makefile` | Build targets: `verify-artifacts`, `build`, `destroy`, `exec`, `run` |
+| `versions.yml` | Self-contained manifest of dependency versions (copied from artiary) |
+
+## Build Modes
+
+### Online Mode (default)
+
+Builds directly from the internet. No sibling repositories required. Ideal for DockerHub and CI/CD.
+
+```bash
+make build        # Online build (default)
+```
+
+The Dockerfile fetches:
+- APT packages via `apt-get`
+- NPM packages via `npm install -g`
+- Scripts (`claude`, `yarn`, `copilot`) via `curl`
+- Python tools (`kimi`, `mistral`) via `uv tool install`
+
+### Offline Mode
+
+Uses pre-fetched artifacts from artiary for reproducible, air-gapped builds.
+
+```bash
+# Stage artiary artifacts into the docker build context
+make stage-artifacts ARTIFACTS=../artiary/artifacts
+# Or copy/link them manually to docker/artifacts/
+
+# Build offline
+make build DOCKERFILE=Dockerfile.offline
+```
 
 ## End-User Setup (distributed tarball)
 
@@ -37,19 +68,19 @@ chmod 600 docker-llm-cli.env
 ## Developer Commands
 
 ```bash
-make build      # Load artifact image, build and start container
-make destroy    # Stop container and remove volumes
-make exec       # Attach to running container via bash
-make run        # Run container via run.sh
+make build DOCKERFILE=Dockerfile          # Online build (default)
+make build DOCKERFILE=Dockerfile.offline # Offline build using staged artifacts
+make destroy                     # Stop container and remove volumes
+make exec                        # Attach to running container via bash
+make run                         # Run container via run.sh
+make test                        # Run dgoss validation tests
 ```
-
-**Prerequisite:** Run `make artifacts` from the repo root first to populate `artiary/artifacts/`.
 
 ## Build Process
 
-1. `make verify-artifacts` checks for `node.tar`, `versions.yml`, and `docker-llm-cli.env`
-2. `docker load -i` loads the frozen Node image
-3. Compose builds with `--pull never`, passing `NODE_IMAGE` and `YARN_VERSION` from `versions.yml`
+1. `make verify-artifacts` checks prerequisites (skips artifact checks in online mode)
+2. `docker compose build` builds the image with `--pull never` in offline mode
+3. Compose starts the container with the appropriate environment
 
 ## Key Details
 
@@ -57,3 +88,4 @@ make run        # Run container via run.sh
 - `/workspace` is a bind mount to `WORKSPACE_DIR` on the host — edits are visible from both sides
 - `/artifacts` is a named Docker volume (`docker-llm-cli-artifacts`)
 - SSH agent socket is forwarded for git operations inside the container
+- The `docker/` directory is self-contained; it no longer references sibling directories
