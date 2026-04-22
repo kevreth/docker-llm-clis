@@ -10,6 +10,14 @@ BUNDLE_TAR  := $(BUNDLE_NAME).tar.gz
 
 .PHONY: build destroy exec run verify-artifacts backup-home export test clean
 
+all:
+	docker stop $(IMAGE_NAME) 2>/dev/null || true
+	docker rm $(IMAGE_NAME) 2>/dev/null || true
+	docker rmi -f $(IMAGE_NAME) 2>/dev/null || true
+	$(MAKE) build
+	$(MAKE) test
+	$(MAKE) export
+
 verify-artifacts:
 	@test -f $(NODE_TAR) || \
 	    (echo "ERROR: artifact image missing - run 'make artifacts' from repo root first" && exit 1)
@@ -29,9 +37,6 @@ destroy:
 
 exec:
 	docker exec -it docker-llm-cli bash
-
-run:
-	./export/run.sh
 
 backup-home:
 	@mkdir -p /workspace/.backups
