@@ -15,8 +15,10 @@ RUN for f in /tmp/npm/*.tgz; do tar xzf "$f" -C /opt; done && rm -rf /tmp/npm
 ENV PATH="/opt/npm-global/bin:$PATH"
 
 USER root
-COPY --chown=node:node artiary/artifacts/builders/mistral/mistral-vibe-offline.tar.gz /tmp/
+COPY --chown=node:node artiary/artifacts/builders/ /tmp/builders/
 COPY --chown=node:node artiary/artifacts/scripts/ /tmp/scripts/
+
+ENV UV_PYTHON_PREFERENCE=only-system
 
 USER node
 RUN mkdir -p "$HOME/.local/bin" && \
@@ -37,9 +39,16 @@ RUN mkdir -p "$HOME/.local/bin" && \
         esac; \
     done && \
     rm -rf /tmp/scripts
-RUN tar xzf /tmp/mistral-vibe-offline.tar.gz -C /tmp && \
-    bash /tmp/mistral-vibe-offline/install.sh && \
-    rm -rf /tmp/mistral-vibe-offline.tar.gz /tmp/mistral-vibe-offline
+RUN awk '/^scripts:$/{f=1;next} f&&/^  [a-z]/&&!/^    /{if(name&&art)print name"\t"art; name=substr($0,3);sub(/:$/,"",name);art="";next} f&&name&&/^    artifact:/{art=$2;gsub(/"/,"",art);next} f&&/^[a-zA-Z]/{if(name&&art)print name"\t"art; name="";exit} END{if(f&&name&&art)print name"\t"art}' /tmp/versions.yml \
+    | while read -r name art; do \
+        tgz="/tmp/builders/${name}/${art}"; \
+        dir="${art%.tar.gz}"; dir="${dir%.tgz}"; \
+        [ -f "$tgz" ] || { echo "ERROR: missing artifact: $tgz" >&2; exit 1; }; \
+        tar xzf "$tgz" -C /tmp && \
+        bash "/tmp/${dir}/install.sh" && \
+        rm -rf "/tmp/${dir}"; \
+    done && \
+    rm -rf /tmp/builders
 
 USER root
 RUN mkdir -p /workspace /artifacts /home/node/.ssh
