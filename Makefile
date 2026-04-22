@@ -43,9 +43,8 @@ all:
 	docker stop $(IMAGE_NAME) 2>/dev/null || true
 	docker rm $(IMAGE_NAME) 2>/dev/null || true
 	docker rmi -f $(IMAGE_NAME) 2>/dev/null || true
-	$(MAKE) build
+	$(MAKE) build DOCKERFILE=Dockerfile.offline
 	$(MAKE) test
-	$(MAKE) export
 
 verify-artifacts:
 ifeq ($(DOCKERFILE),Dockerfile.offline)
@@ -60,7 +59,7 @@ endif
 build: verify-artifacts
 ifeq ($(DOCKERFILE),Dockerfile.offline)
 	docker load -i $(NODE_TAR)
-	$(COMPOSE) build --pull never
+	$(COMPOSE) build
 else
 	$(COMPOSE) build
 endif
