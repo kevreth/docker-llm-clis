@@ -32,8 +32,8 @@ RUN mkdir -p "$HOME/.local/bin" && \
         case "$url" in \
             *.tar.gz|*.tgz) \
                 d=$(mktemp -d) && \
-                tar xf "$src" -C "$d" --strip-components=1 && \
-                find "$d" -maxdepth 1 -type f | xargs -I{} install -m 755 {} "$HOME/.local/bin/" && \
+                tar xf "$src" -C "$d" && \
+                find "$d" -type f | xargs -I{} install -m 755 {} "$HOME/.local/bin/" && \
                 rm -rf "$d" ;; \
             *) install -m 755 "$src" "$HOME/.local/bin/$name" ;; \
         esac; \
