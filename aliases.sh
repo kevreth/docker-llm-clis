@@ -29,7 +29,7 @@ function prompt() {
     local RED_LIGHT="\[\033[0;38m\]"
     local BLACK="\[\033[0;30m\]"
     local GRAY="\[\033[1;30m\]"
-    local GRAY="\[\033[0;37m\]"
+    local WHITE="\[\033[1;37m\]"
     local WHITE="\[\033[1;37m\]"
     local NC="\[\033[0m\]"
     case $TERM in

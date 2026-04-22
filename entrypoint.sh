@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 set -euo pipefail
-cp -an "${HOME}.seed/." "${HOME}/"
+cp -a "${HOME}.seed/." "${HOME}/"
 exec "$@"
