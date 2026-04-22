@@ -8,7 +8,7 @@ BUNDLE_NAME := docker-llm-cli-bundle
 BUNDLE_DIR  := $(BUNDLE_NAME)
 BUNDLE_TAR  := $(BUNDLE_NAME).tar.gz
 
-.PHONY: build destroy exec run verify-artifacts backup-home export
+.PHONY: build destroy exec run verify-artifacts backup-home export test clean
 
 verify-artifacts:
 	@test -f $(NODE_TAR) || \
@@ -41,6 +41,11 @@ backup-home:
 
 export:
 	@./run.sh
+
+test:
+	@which dgoss >/dev/null 2>&1 || { echo "ERROR: dgoss not found. Install: https://github.com/goss-org/goss" ; exit 1; }
+	@docker image inspect $(IMAGE_NAME) >/dev/null 2>&1 || { echo "ERROR: image '$(IMAGE_NAME)' not found. Run 'make build' first." ; exit 1; }
+	dgoss run --user 1000:1000 -e HOME=/home/llm $(IMAGE_NAME) tail -f /dev/null
 
 clean:
 	docker stop $(docker ps -aq) 2>/dev/null; \

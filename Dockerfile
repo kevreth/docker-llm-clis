@@ -11,7 +11,7 @@ COPY artiary/artifacts/manifest/versions.yml /tmp/versions.yml
 COPY artiary/artifacts/apt/lists/ /var/lib/apt/lists/
 COPY artiary/artifacts/apt/*.deb /var/cache/apt/archives/
 RUN apt-get install -y --no-install-recommends --no-download \
-      $(awk '/^apt:$/{f=1;next} f&&/^  -/{sub(/^  - /,"");printf "%s ",$0} f&&/^[a-zA-Z]/{exit}' /tmp/versions.yml) && \
+      $(awk '/^apt:/{f=1;next} f&&/^[a-zA-Z]/{exit} f&&/^  -/{sub(/^  - /,"");printf "%s ",$0}' /tmp/versions.yml) && \
     rm -rf /var/lib/apt/lists/*
 COPY artiary/artifacts/npm/ /tmp/npm/
 RUN for f in /tmp/npm/*.tgz; do tar xzf "$f" -C /opt; done && rm -rf /tmp/npm

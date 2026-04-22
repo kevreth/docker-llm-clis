@@ -44,6 +44,10 @@ while IFS= read -r line; do
   fi
 done < "$ENV_FILE"
 
+if ! docker image inspect docker-llm-cli &>/dev/null; then                                                                                                                                  
+  docker load -i "$SCRIPT_DIR/docker-llm-cli.tar"                                                                                                                                           
+fi 
+
 docker run -it --rm \
   --name docker-llm-cli \
   --init \
