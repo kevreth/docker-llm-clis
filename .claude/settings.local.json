@@ -1,0 +1,35 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//mnt/kev-labs0/src/artiary/builders/**)",
+      "Read(//mnt/kev-labs0/src/artiary/artifacts/builders/**)",
+      "Read(//mnt/kev-labs0/src/artiary/**)",
+      "Bash(tar tzf *)",
+      "Bash(tar xzf *)",
+      "Bash(OUTPUT_DIR=\"$\\(pwd\\)/artifacts/builders/mistral\" bash builders/mistral/build.sh)",
+      "Bash(OUTPUT_DIR=\"$\\(pwd\\)/../../artifacts/builders/mistral\" bash build.sh)",
+      "Bash(make build *)",
+      "Bash(make fetch *)",
+      "Bash(docker exec kev-labs *)",
+      "Read(//mnt/kev-labs0/src/**)",
+      "Bash(docker build *)",
+      "Bash(awk *)",
+      "Bash(pip3 wheel *)",
+      "Bash(cp /tmp/ripgrepy-wheel/ripgrepy-2.2.0-py3-none-any.whl /mnt/kev-labs0/src/artiary/artifacts/builders/kimi/kimi-cli-offline/wheels/)",
+      "Bash(rm /mnt/kev-labs0/src/artiary/artifacts/builders/kimi/kimi-cli-offline/wheels/ripgrepy-2.2.0.tar.gz)",
+      "Bash(tar czf *)",
+      "Bash(curl -fsSL https://gh.io/copilot-install)",
+      "Bash(curl -fsSL https://github.com/github/copilot-cli/releases/latest/download/SHA256SUMS.txt)",
+      "Bash(curl -fsSL -I https://github.com/github/copilot-cli/releases/latest)",
+      "Bash(mkdir -p /mnt/kev-labs0/src/artiary/artifacts/builders/copilot)",
+      "Bash(OUTPUT_DIR=/mnt/kev-labs0/src/artiary/artifacts/builders/copilot bash build.sh)",
+      "Bash(curl -fsSL -o /mnt/kev-labs0/src/artiary/artifacts/scripts/copilot-1.0.34 \"https://github.com/github/copilot-cli/releases/download/v1.0.34/copilot-linux-x64.tar.gz\")",
+      "Bash(docker exec *)",
+      "Bash(chmod +x *)",
+      "Read(//media/kev/home1/git/system/**)",
+      "Bash(xargs ls *)",
+      "Bash(tar tvzf *)",
+      "Bash(docker run *)"
+    ]
+  }
+}

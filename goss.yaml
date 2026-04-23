@@ -58,6 +58,23 @@ file:
     exists: true
     filetype: file
     mode: "0755"
+  /opt/npm-global/lib/node_modules/@qwen-code/qwen-code/package.json:
+    exists: true
+    filetype: file
+    contains:
+      - '"version": "0.15.0"'
+  /home/llm/.local/bin/goose:
+    exists: true
+    filetype: file
+    mode: "0755"
+  /home/llm/.local/bin/jq:
+    exists: true
+    filetype: file
+    mode: "0755"
+  /home/llm/.local/bin/factory-droid:
+    exists: true
+    filetype: file
+    mode: "0755"
 
 command:
   node --version:
@@ -96,4 +113,23 @@ command:
     timeout: 30000
   opencode --version:
     exit-status: 0
+    timeout: 30000
+  qwen --version:
+    exit-status: 0
+    stdout:
+      - "/0\\.15\\.0/"
+    timeout: 30000
+  goose --version:
+    exit-status: 0
+    stdout:
+      - "/1\\.31\\.1/"
+    timeout: 30000
+  jq --version:
+    exit-status: 0
+    stdout:
+      - "/1\\.8\\.1/"
+  factory-droid --version:
+    exit-status: 0
+    stdout:
+      - "/0\\.106\\.0/"
     timeout: 30000
