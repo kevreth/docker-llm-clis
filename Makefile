@@ -43,6 +43,7 @@ all:
 	docker stop $(IMAGE_NAME) 2>/dev/null || true
 	docker rm $(IMAGE_NAME) 2>/dev/null || true
 	docker rmi -f $(IMAGE_NAME) 2>/dev/null || true
+	docker system prune -af || true
 	$(MAKE) build DOCKERFILE=Dockerfile.offline
 	$(MAKE) test
 
@@ -92,11 +93,3 @@ check-sync:
 	@diff -q /tmp/dockerfile.tail /tmp/dockerfile-offline.tail || \
 	    (echo "ERROR: Common tail sections of Dockerfile and Dockerfile.offline have drifted." && exit 1)
 	@echo "OK: Common sections are synchronized."
-
-clean:
-	docker stop $$(docker ps -aq) 2>/dev/null; \
-	docker rm $$(docker ps -aq) 2>/dev/null; \
-	docker rmi -f $$(docker images -aq) 2>/dev/null; \
-	docker volume rm $$(docker volume ls -q) 2>/dev/null; \
-	docker network rm $$(docker network ls -q) 2>/dev/null; \
-	docker system prune -a --volumes -f
