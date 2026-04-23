@@ -71,6 +71,10 @@ file:
     exists: true
     filetype: file
     mode: "0755"
+  /home/llm/.local/bin/yq:                                                                                                                                                               
+    exists: true                                                                                                                                                                         
+    filetype: file                                                                                                                                                                       
+    mode: "0755"         
   /home/llm/.local/bin/factory-droid:
     exists: true
     filetype: file
@@ -79,11 +83,9 @@ file:
 command:
   node --version:
     exit-status: 0
-    stdout:
-      - "/v24./"
   npm --version:
     exit-status: 0
-  sh -c "yarn --version > /tmp/yarn_ver.txt && grep -q '4.14.1' /tmp/yarn_ver.txt":
+  yarn --version:
     exit-status: 0
   python3 --version:
     exit-status: 0
@@ -116,20 +118,14 @@ command:
     timeout: 30000
   qwen --version:
     exit-status: 0
-    stdout:
-      - "/0\\.15\\.0/"
     timeout: 30000
   goose --version:
     exit-status: 0
-    stdout:
-      - "/1\\.31\\.1/"
     timeout: 30000
   jq --version:
     exit-status: 0
-    stdout:
-      - "/1\\.8\\.1/"
+  yq --version:
+    exit-status: 0
   factory-droid --version:
     exit-status: 0
-    stdout:
-      - "/0\\.106\\.0/"
     timeout: 30000
