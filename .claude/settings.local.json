@@ -29,7 +29,22 @@
       "Read(//media/kev/home1/git/system/**)",
       "Bash(xargs ls *)",
       "Bash(tar tvzf *)",
-      "Bash(docker run *)"
+      "Bash(docker run *)",
+      "Bash(docker image *)",
+      "Bash(yq '.apt[]' /mnt/kev-labs0/src/docker/artifacts/manifest/versions.yml)",
+      "Bash(grep -A5 \"^Package: libaom3$\" /mnt/kev-labs0/src/docker/artifacts/apt/lists/deb.debian.org_debian_dists_trixie_main_binary-amd64_Packages)",
+      "Bash(sudo -n true)",
+      "Bash(yq '.image.base' versions.yml)",
+      "Bash(yq '.image.version // \"\"' versions.yml)",
+      "Bash(xargs -I{} basename {})",
+      "Bash(grep -A20 \"^Package: libaom3$\" /home/kev/data/src/docker/artifacts/apt/lists/deb.debian.org_debian_dists_trixie_main_binary-amd64_Packages)",
+      "Bash(make all *)",
+      "Bash(sudo du *)",
+      "Bash(uv cache *)",
+      "Bash(rm -rf /home/kev/.cache/uv)",
+      "Bash(pip cache *)",
+      "Bash(rm -rf /home/kev/.cache/pip)",
+      "Bash(dgoss run *)"
     ]
   }
 }

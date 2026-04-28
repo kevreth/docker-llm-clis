@@ -62,7 +62,7 @@ file:
     exists: true
     filetype: file
     contains:
-      - '"version": "0.15.0"'
+      - '"version": "0.15.3"'
   /home/llm/.local/bin/goose:
     exists: true
     filetype: file

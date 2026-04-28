@@ -6,6 +6,7 @@ ARG YARN_VERSION=4.14.1
 ARG CLAUDE_VERSION=2.1.114
 ARG YARN_SCRIPT_VERSION=4.14.1
 ARG COPILOT_VERSION=1.0.34
+ARG GH_VERSION=2.91.0
 ARG KIMI_VERSION=1.37.0
 ARG MISTRAL_VERSION=2.7.6
 
@@ -39,6 +40,11 @@ RUN mkdir -p /home/${CONTAINER_USER}/.local/bin && \
     curl -fsSL "https://repo.yarnpkg.com/${YARN_SCRIPT_VERSION}/packages/yarnpkg-cli/bin/yarn.js" \
       -o /home/${CONTAINER_USER}/.local/bin/yarn && \
     chmod +x /home/${CONTAINER_USER}/.local/bin/yarn && \
+    d=$(mktemp -d) && \
+    curl -fsSL "https://github.com/cli/cli/releases/download/v${GH_VERSION}/gh_${GH_VERSION}_linux_amd64.tar.gz" \
+      | tar xz -C "$d" && \
+    install -m 755 "$d/gh_${GH_VERSION}_linux_amd64/bin/gh" /home/${CONTAINER_USER}/.local/bin/gh && \
+    rm -rf "$d" && \
     d=$(mktemp -d) && \
     curl -fsSL "https://github.com/github/copilot-cli/releases/download/v${COPILOT_VERSION}/copilot-linux-x64.tar.gz" \
       | tar xz -C "$d" && \

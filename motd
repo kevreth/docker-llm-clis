@@ -1,16 +1,15 @@
 
-              [1;32mLLM CLI commands[0m
+                         [1;32mLLM CLI commands[0m
 
-         [31mAlibaba Qwen[0m         : qwen
-         [38;5;208mAnthropic Claude Code[0m: claude
-         [35mCharm Crush[0m          : crush
-         [95mFactory Droid[0m        : factory-droid
-         [34mGitHub Copilot[0m       : copilot
-         [33mGoogle Gemini[0m        : gemini
-         [93mGoose[0m                : goose
-         [36mKimi[0m                 : kimi
-         [32mMistral[0m              : vibe
-         [94mOpenAI Codex[0m         : codex
-         [91mOpenCode[0m             : opencode
-
-FREE ACCESS from Codex, Copilot, Gemini, Opencode, and Mistral!
+             [31mAlibaba Qwen[0m         : qwen
+             [38;5;208mAnthropic Claude Code[0m: claude
+             [93mCharm Crush[0m          : crush [1;32mFREE![0m
+             [34mGitHub Copilot[0m       : copilot [1;32mFREE![0m
+             [95mFactory Droid[0m        : droid
+             [33mGoogle Gemini[0m        : gemini [1;32mFREE![0m
+             [35mGoose[0m                : goose
+             [38;5;147mKilo[0m                 : kilo [1;32mFREE![0m
+             [36mKimi[0m                 : kimi
+             [32mMistral[0m              : vibe [1;32mFREE![0m
+             [94mOpenAI Codex[0m         : codex [1;32mFREE![0m
+             [91mOpenCode[0m             : opencode [1;32mFREE![0m

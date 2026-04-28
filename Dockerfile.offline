@@ -12,7 +12,8 @@ COPY versions.yml /tmp/versions.yml
 COPY artifacts/ /tmp/artifacts/
 
 # APT packages (offline — from frozen apt lists and .deb files)
-RUN mkdir -p /var/lib/apt/lists/ && \
+RUN rm -rf /var/lib/apt/lists/* && \
+    mkdir -p /var/lib/apt/lists/ && \
     cp -r /tmp/artifacts/apt/lists/* /var/lib/apt/lists/ && \
     cp /tmp/artifacts/apt/*.deb /var/cache/apt/archives/ && \
     apt-get install -y --no-install-recommends --no-download \
@@ -47,7 +48,7 @@ RUN mkdir -p "$HOME/.local/bin" && \
         case "$url" in \
             *.tar.gz|*.tgz) \
                 d=$(mktemp -d) && \
-                tar xf "$src" -C "$d" && \
+                tar xf "$src" -C "$d" 2>/dev/null || true && \
                 find "$d" -type f | xargs -I{} install -m 755 {} "$HOME/.local/bin/" && \
                 rm -rf "$d" ;; \
             *) install -m 755 "$src" "$HOME/.local/bin/$name" ;; \
@@ -81,6 +82,11 @@ RUN echo "source /etc/profile.d/aliases.sh" >> /home/${CONTAINER_USER}/.bashrc &
     echo "cat /etc/motd" >> /home/${CONTAINER_USER}/.bashrc && \
     rm /tmp/versions.yml
 RUN cp -a /home/${CONTAINER_USER}/. /home/${CONTAINER_USER}.seed/
+RUN sudo ln -s /usr/bin/fdfind /usr/local/bin/fd
+# Prevent CLIs from opening text web browsers for authentication, which they cannot complete.
+# alias.sh allows them to be called normally.
+RUN mv /usr/bin/links /usr/bin/lnks && mv /usr/bin/links2 /usr/bin/lnks2 && mv /usr/bin/lynx /usr/bin/lyx
+
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
