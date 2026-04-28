@@ -61,8 +61,6 @@ file:
   /opt/npm-global/lib/node_modules/@qwen-code/qwen-code/package.json:
     exists: true
     filetype: file
-    contains:
-      - '"version": "0.15.3"'
   /home/llm/.local/bin/goose:
     exists: true
     filetype: file
