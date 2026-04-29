@@ -1,16 +1,16 @@
 
-[32m┌────────────────────────────────────┐[0m
-[32m│           [1;32mLLM CLI commands[0m         [32m│[0m
-[32m│[0m  [31mClaude Code[0m    : claude           [32m│[0m
-[32m│[0m  [32mOpenAI Codex[0m   : codex   [1;32mFREE![0m    [32m│[0m
-[32m│[0m  [33mGitHub Copilot[0m : copilot [1;32mFREE![0m    [32m│[0m
-[32m│[0m  [34mCharm Crush[0m    : crush   [1;32mFREE![0m    [32m│[0m
-[32m│[0m  [35mFactory Droid[0m  : droid            [32m│[0m
-[32m│[0m  [36mGoogle Gemini[0m  : gemini  [1;32mFREE![0m    [32m│[0m
-[32m│[0m  [91mGoose[0m          : goose            [32m│[0m
-[32m│[0m  [92mKilo[0m           : kilo    [38;2;255;0;0mN[38;2;255;85;0mO[38;2;255;170;0m [38;2;200;255;0mL[38;2;120;255;0mO[38;2;0;255;0mG[38;2;0;200;255mI[38;2;0;120;255mN[38;2;0;0;255m![0m[32m│[0m
-[32m│[0m  [93mKimi[0m           : kimi             [32m│[0m
-[32m│[0m  [94mOpenCode[0m       : oc      [38;2;255;0;0mN[38;2;255;85;0mO[38;2;255;170;0m [38;2;200;255;0mL[38;2;120;255;0mO[38;2;0;255;0mG[38;2;0;200;255mI[38;2;0;120;255mN[38;2;0;0;255m![0m[32m│[0m
-[32m│[0m  [95mAlibaba Qwen[0m   : qwen             [32m│[0m
-[32m│[0m  [96mMistral Vibe[0m   : vibe    [1;32mFREE![0m    [32m│[0m
-[32m└────────────────────────────────────┘[0m
+[32m┌───────────────────────────────────┐[0m
+[32m│          [1;32mLLM CLI commands[0m         [32m│[0m
+[32m│[0m [31mClaude Code[0m    : claude           [32m│[0m
+[32m│[0m [32mOpenAI Codex[0m   : codex   [1;32mFREE![0m    [32m│[0m
+[32m│[0m [33mGitHub Copilot[0m : copilot [1;32mFREE![0m    [32m│[0m
+[32m│[0m [34mCharm Crush[0m    : crush   [1;32mFREE![0m    [32m│[0m
+[32m│[0m [35mFactory Droid[0m  : droid            [32m│[0m
+[32m│[0m [36mGoogle Gemini[0m  : gemini  [1;32mFREE![0m    [32m│[0m
+[32m│[0m [91mGoose[0m          : goose            [32m│[0m
+[32m│[0m [92mKilo[0m           : kilo    [38;2;255;0;0mN[38;2;255;85;0mO[38;2;255;170;0m [38;2;200;255;0mL[38;2;120;255;0mO[38;2;0;255;0mG[38;2;0;200;255mI[38;2;0;120;255mN[38;2;0;0;255m![0m[32m│[0m
+[32m│[0m [93mKimi[0m           : kimi             [32m│[0m
+[32m│[0m [94mOpenCode[0m       : oc      [38;2;255;0;0mN[38;2;255;85;0mO[38;2;255;170;0m [38;2;200;255;0mL[38;2;120;255;0mO[38;2;0;255;0mG[38;2;0;200;255mI[38;2;0;120;255mN[38;2;0;0;255m![0m[32m│[0m
+[32m│[0m [95mAlibaba Qwen[0m   : qwen             [32m│[0m
+[32m│[0m [96mMistral Vibe[0m   : vibe    [1;32mFREE![0m    [32m│[0m
+[32m└───────────────────────────────────┘[0m
