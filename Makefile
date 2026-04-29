@@ -27,22 +27,12 @@ MISTRAL_VERSION   := $(or $(shell yq '.scripts.mistral.version' $(VERSIONS_FILE)
 export NODE_IMAGE YARN_VERSION \
   CLAUDE_VERSION YARN_SCRIPT_VERSION COPILOT_VERSION GH_VERSION KIMI_VERSION MISTRAL_VERSION
 
-.PHONY: build destroy exec run verify-artifacts stage-artifacts backup-home export test clean check-sync
+.PHONY: build destroy exec run verify-artifacts sync backup-home export test clean check-sync
 
-stage-artifacts:
-	@if [ "$(ARTIFACTS)" = "./artifacts" ] || [ "$(ARTIFACTS)" = "$(realpath ./artifacts 2>/dev/null || echo ./artifacts)" ]; then \
-		echo "ERROR: ARTIFACTS cannot be ./artifacts (would delete itself)."; \
-		echo "Usage: make stage-artifacts ARTIFACTS=../artiary/artifacts"; \
-		exit 1; \
-	fi
-	@if [ ! -d "$(ARTIFACTS)" ]; then \
-		echo "ERROR: source directory $(ARTIFACTS) does not exist"; \
-		echo "Usage: make stage-artifacts ARTIFACTS=../artiary/artifacts"; \
-		exit 1; \
-	fi
-	@rm -rf ./artifacts
-	@cp -r "$(ARTIFACTS)" ./artifacts
-	@echo "Artifacts staged from $(ARTIFACTS) to ./artifacts"
+sync:
+	rsync -av --delete ../artiary/artifacts/ artifacts/
+	rm -f versions.yml
+	cp ../artiary/versions.yml .
 
 clean:
 	docker stop $(IMAGE_NAME) 2>/dev/null || true
