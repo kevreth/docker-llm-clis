@@ -2,11 +2,8 @@ ARG NODE_IMAGE=node:24-trixie
 FROM ${NODE_IMAGE}
 
 ARG CONTAINER_USER=llm
-ARG YARN_VERSION=4.14.1
-
 ENV DEBIAN_FRONTEND=noninteractive
 ENV PATH="/home/${CONTAINER_USER}/.local/bin:$PATH"
-ENV YARN_VERSION=${YARN_VERSION}
 
 COPY versions.yml /tmp/versions.yml
 COPY artifacts/ /tmp/artifacts/
