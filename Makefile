@@ -16,16 +16,6 @@ NODE_TAR      := $(ARTIFACTS)/images/$(_BASE_SLUG)$(if $(_VER_SLUG),-$(_VER_SLUG
 NODE_BASE     := $(or $(shell yq '.image.base' $(VERSIONS_FILE) 2>/dev/null | tr -d '"'),node:24-trixie)
 NODE_DIGEST   := $(shell yq '.image.version // ""' $(VERSIONS_FILE) 2>/dev/null | tr -d '"')
 NODE_IMAGE    := $(if $(NODE_DIGEST),$(NODE_BASE)@$(NODE_DIGEST),$(NODE_BASE))
-YARN_VERSION  := $(or $(shell yq '.yarn' $(VERSIONS_FILE) 2>/dev/null | tr -d '"'),4.14.1)
-CLAUDE_VERSION    := $(or $(shell yq '.scripts.claude.version' $(VERSIONS_FILE) 2>/dev/null | tr -d '"'),2.1.114)
-YARN_SCRIPT_VERSION  := $(or $(shell yq '.scripts.yarn.version' $(VERSIONS_FILE) 2>/dev/null | tr -d '"'),4.14.1)
-COPILOT_VERSION   := $(or $(shell yq '.scripts.copilot.version' $(VERSIONS_FILE) 2>/dev/null | tr -d '"'),1.0.34)
-GH_VERSION        := $(or $(shell yq '.scripts.gh.version' $(VERSIONS_FILE) 2>/dev/null | tr -d '"'),2.91.0)
-KIMI_VERSION      := $(or $(shell yq '.scripts.kimi.version' $(VERSIONS_FILE) 2>/dev/null | tr -d '"'),1.37.0)
-MISTRAL_VERSION   := $(or $(shell yq '.scripts.mistral.version' $(VERSIONS_FILE) 2>/dev/null | tr -d '"'),2.7.6)
-
-export NODE_IMAGE YARN_VERSION \
-  CLAUDE_VERSION YARN_SCRIPT_VERSION COPILOT_VERSION GH_VERSION KIMI_VERSION MISTRAL_VERSION
 
 .PHONY: build destroy exec run verify-artifacts sync backup-home export test clean check-sync
 
