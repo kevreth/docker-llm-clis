@@ -1,3 +1,4 @@
+# syntax=docker/dockerfile:1.4
 ARG NODE_IMAGE=node:24-trixie
 FROM ${NODE_IMAGE}
 
@@ -5,8 +6,8 @@ ARG CONTAINER_USER=llm
 ENV DEBIAN_FRONTEND=noninteractive
 ENV PATH="/home/${CONTAINER_USER}/.local/bin:$PATH"
 
-COPY versions.yml /tmp/versions.yml
-COPY artifacts/ /tmp/artifacts/
+COPY --from=artiary_data versions.yml /tmp/versions.yml
+COPY --from=artiary_artifacts . /tmp/artifacts/
 
 # APT packages (offline — from frozen apt lists and .deb files)
 RUN rm -rf /var/lib/apt/lists/* && \
@@ -86,6 +87,6 @@ RUN sudo ln -s /usr/bin/fdfind /usr/local/bin/fd
 RUN mv /usr/bin/links /usr/bin/lnks && mv /usr/bin/links2 /usr/bin/lnks2 && mv /usr/bin/lynx /usr/bin/lyx
 
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
-RUN chmod +x /usr/local/bin/entrypoint.sh
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+# RUN chmod +x /usr/local/bin/entrypoint.sh
 CMD ["/bin/bash", "-l"]

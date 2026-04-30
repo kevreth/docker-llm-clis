@@ -6,6 +6,9 @@ services:
     build:
       context: .
       dockerfile: ${DOCKERFILE:-Dockerfile}
+      additional_contexts:
+        artiary_artifacts: ${ARTIARY_ARTIFACTS:-.}
+        artiary_data: ${ARTIARY_DATA_DIR:-.}
       args:
         - NODE_IMAGE
         - YARN_VERSION

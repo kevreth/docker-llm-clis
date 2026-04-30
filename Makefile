@@ -1,5 +1,7 @@
 DOCKERFILE    ?= Dockerfile
-ARTIFACTS     ?= ./artifacts
+ARTIARY_DATA_DIR ?= $(HOME)/.local/share/artiary
+ARTIARY_ARTIFACTS ?= $(HOME)/.cache/artiary/artifacts
+ARTIFACTS     ?= $(ARTIARY_ARTIFACTS)
 MANIFEST      := $(ARTIFACTS)/manifest/versions.yml
 COMPOSE       := docker compose --env-file docker-llm-cli.env -f docker-compose.yml
 
@@ -9,7 +11,7 @@ BUNDLE_DIR    := $(BUNDLE_NAME)
 BUNDLE_TAR    := $(BUNDLE_NAME).tar.gz
 
 # Versions read from local versions.yml (self-contained)
-VERSIONS_FILE := versions.yml
+VERSIONS_FILE := $(if $(filter $(DOCKERFILE),Dockerfile.offline),$(ARTIARY_DATA_DIR)/versions.yml,versions.yml)
 _BASE_SLUG    := $(shell yq '.image.base' $(VERSIONS_FILE) 2>/dev/null | tr -d '"' | tr ':' '-')
 _VER_SLUG     := $(shell yq '.image.version // ""' $(VERSIONS_FILE) 2>/dev/null | tr -d '"' | sed 's/^sha256://')
 NODE_TAR      := $(ARTIFACTS)/images/$(_BASE_SLUG)$(if $(_VER_SLUG),-$(_VER_SLUG),).tar
@@ -17,12 +19,10 @@ NODE_BASE     := $(or $(shell yq '.image.base' $(VERSIONS_FILE) 2>/dev/null | tr
 NODE_DIGEST   := $(shell yq '.image.version // ""' $(VERSIONS_FILE) 2>/dev/null | tr -d '"')
 NODE_IMAGE    := $(if $(NODE_DIGEST),$(NODE_BASE)@$(NODE_DIGEST),$(NODE_BASE))
 
-.PHONY: build destroy exec run verify-artifacts sync backup-home export test clean check-sync
+export ARTIARY_DATA_DIR ARTIARY_ARTIFACTS
+export NODE_IMAGE DOCKERFILE
 
-sync:
-	rsync -av --delete ../artiary/artifacts/ artifacts/
-	rm -f versions.yml
-	cp ../artiary/versions.yml .
+.PHONY: build destroy exec run verify-artifacts backup-home export test clean check-sync
 
 clean:
 	docker stop $(IMAGE_NAME) 2>/dev/null || true
@@ -40,22 +40,27 @@ all:
 
 verify-artifacts:
 ifeq ($(DOCKERFILE),Dockerfile.offline)
+	@test -f $(VERSIONS_FILE) || \
+	    (echo "ERROR: $(VERSIONS_FILE) missing - run 'make resolve' in artiary first" && exit 1)
 	@test -f $(NODE_TAR) || \
-	    (echo "ERROR: $(NODE_TAR) missing - run 'make stage-artifacts ARTIFACTS=../artiary/artifacts' first" && exit 1)
-	@test -f ./artifacts/manifest/versions.yml || \
-	    (echo "ERROR: ./artifacts/manifest/versions.yml missing - run 'make stage-artifacts ARTIFACTS=../artiary/artifacts' first" && exit 1)
-	@for entry in $$(yq -r '.apt[]' ./artifacts/manifest/versions.yml 2>/dev/null | grep '='); do \
-	    name=$$(echo "$$entry" | cut -d= -f1 | cut -d: -f1); \
+	    (echo "ERROR: $(NODE_TAR) missing - run 'make fetch' in artiary first" && exit 1)
+	@test -f $(MANIFEST) || \
+	    (echo "ERROR: $(MANIFEST) missing - run 'make fetch' in artiary first" && exit 1)
+	@for entry in $$(yq -r '.apt[]' $(MANIFEST) 2>/dev/null | grep '='); do \
+	    name=$$(echo "$$entry" | cut -d= -f1); \
+	    base_name=$$(echo "$$name" | cut -d: -f1); \
 	    ver=$$(echo "$$entry" | cut -d= -f2-); \
 	    deb_ver=$$(echo "$$ver" | sed 's/:/%3a/g'); \
-	    ls "./artifacts/apt/$${name}_$${deb_ver}_"*.deb >/dev/null 2>&1 || \
+	    ls "$(ARTIFACTS)/apt/$${base_name}_$${ver}_"*.deb >/dev/null 2>&1 || \
+	    ls "$(ARTIFACTS)/apt/$${base_name}_$${deb_ver}_"*.deb >/dev/null 2>&1 || \
 	        { echo "ERROR: missing apt artifact: $$entry" >&2; exit 1; }; \
 	done
 endif
-	@test -f docker-llm-cli.env || \
-	    (echo "ERROR: docker-llm-cli.env not found - copy docker-llm-cli.env.example and fill in your values" && exit 1)
+	@test -f export/docker-llm-cli.env || \
+	    (echo "ERROR: export/docker-llm-cli.env not found - copy export/docker-llm-cli.env.example and fill in your values" && exit 1)
 
 build: verify-artifacts
+	@mkdir -p $(ARTIARY_ARTIFACTS) $(ARTIARY_DATA_DIR)
 ifeq ($(DOCKERFILE),Dockerfile.offline)
 	@set -e; \
 	  LOAD_OUT=$$(docker load -i $(NODE_TAR)); \
