@@ -12,9 +12,10 @@ COPY artifacts/ /tmp/artifacts/
 RUN rm -rf /var/lib/apt/lists/* && \
     mkdir -p /var/lib/apt/lists/ && \
     cp -r /tmp/artifacts/apt/lists/* /var/lib/apt/lists/ && \
+    mkdir -p /var/cache/apt/archives/ && \
     cp /tmp/artifacts/apt/*.deb /var/cache/apt/archives/ && \
-    apt-get install -y --no-install-recommends --no-download \
-      $(awk '/^apt:/{f=1;next} f&&/^[a-zA-Z]/{exit} f&&/^  -/{sub(/^  - /,"");printf "%s ",$0}' /tmp/versions.yml) && \
+    cd /var/cache/apt/archives/ && \
+    dpkg -i *.deb 2>&1 || apt-get install -f -y && \
     rm -rf /var/lib/apt/lists/*
 
 # NPM packages (offline — from pre-built tarballs)
