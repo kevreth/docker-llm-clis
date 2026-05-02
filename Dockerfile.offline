@@ -96,6 +96,8 @@ RUN sudo ln -s /usr/bin/fdfind /usr/local/bin/fd
 # alias.sh allows them to be called normally.
 RUN mv /usr/bin/links /usr/bin/lnks && mv /usr/bin/links2 /usr/bin/lnks2 && mv /usr/bin/lynx /usr/bin/lyx
 
+COPY tests/ /tests/
+RUN chmod -R 755 /tests/
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 # RUN chmod +x /usr/local/bin/entrypoint.sh
