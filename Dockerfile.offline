@@ -42,10 +42,20 @@ RUN mkdir -p "$HOME/.local/bin" && \
         name=$(echo "$entry" | cut -f1); \
         ver=$(echo "$entry" | cut -f2); \
         url=$(echo "$entry" | cut -f3); \
-        src="/tmp/scripts/${name}-${ver}"; \
+        f=$(basename "$url"); \
+        case "$f" in \
+            *.tar.gz)  ext=".tar.gz";; \
+            *.tar.zst) ext=".tar.zst";; \
+            *.tar.xz)  ext=".tar.xz";; \
+            *.tar.bz2) ext=".tar.bz2";; \
+            *.tgz)     ext=".tgz";; \
+            *.zip)     ext=".zip";; \
+            *)         ext="";; \
+        esac; \
+        src="/tmp/scripts/${name}-${ver}${ext}"; \
         [ -f "$src" ] || { echo "ERROR: missing offline artifact: $src" >&2; exit 1; }; \
         case "$url" in \
-            *.tar.gz|*.tgz) \
+            *.tar.gz|*.tgz|*.tar.zst|*.tar.xz|*.tar.bz2) \
                 d=$(mktemp -d) && \
                 tar xf "$src" -C "$d" 2>/dev/null || true && \
                 find "$d" -type f | xargs -I{} install -m 755 {} "$HOME/.local/bin/" && \
