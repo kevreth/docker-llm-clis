@@ -1,5 +1,5 @@
 export PATH="/opt/npm-global/bin:$PATH"
-alias claude='claude --allow-dangerously-skip-permissions '
+alias claude='CLAUDE_YOLO=1 claude --allow-dangerously-skip-permissions '
 alias codex='codex --dangerously-bypass-approvals-and-sandbox '
 alias copilot='copilot --yolo '
 alias crush='crush --yolo '
