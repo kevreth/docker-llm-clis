@@ -1,0 +1,14 @@
+{
+  "autoApprove": {
+    "read": "allow",
+    "glob": "allow", 
+    "bash": "allow",
+    "edit": "allow",
+    "webfetch": "allow",
+    "websearch": "allow",
+    "codesearch": "allow",
+    "external_directory": "allow",
+    "task": "allow",
+    "skill": "allow"
+  }
+}
