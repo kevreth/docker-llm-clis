@@ -48,28 +48,36 @@ if ! docker image inspect docker-llm-cli &>/dev/null; then
   docker load -i "$SCRIPT_DIR/docker-llm-cli.tar"
 fi
 
-exec docker run -it \
-  --name docker-llm-cli \
-  --init \
-  -u 1000:1000 \
-  -w /workspace \
-  -v "${WORKSPACE_DIR}:/workspace" \
-  -v "docker-llm-cli-artifacts:/artifacts" \
-  -v "docker-llm-cli-home:/home/llm" \
-  -v "${SSH_AUTH_SOCK:-/dev/null}:/ssh-agent" \
-  "${ENV_ARGS[@]}" \
-  -e HOME=/home/llm \
-  -e SHELL=/bin/bash \
-  -e SSH_AUTH_SOCK=/ssh-agent \
-  -e TMPDIR=/workspace/.tmp \
-  -e "GIT_SSH_COMMAND=ssh -o UserKnownHostsFile=/home/llm/.ssh/known_hosts -o IdentityAgent=/ssh-agent" \
-  -e "GH_TOKEN=${GH_TOKEN:-}" \
-  --cap-drop ALL \
-  --cap-add SETUID \
-  --cap-add SETGID \
-  --cap-add NET_RAW \
-  --cap-add NET_ADMIN \
-  --security-opt no-new-privileges:false \
-  --tmpfs /tmp \
-  --tmpfs /run \
-  docker-llm-cli
+if ! docker container inspect docker-llm-cli &>/dev/null; then
+  echo "Starting container..."
+  docker run -d \
+    --name docker-llm-cli \
+    --init \
+    -u 1000:1000 \
+    -w /workspace \
+    -v "${WORKSPACE_DIR}:/workspace" \
+    -v "docker-llm-cli-artifacts:/artifacts" \
+    -v "docker-llm-cli-home:/home/llm" \
+    -v "${SSH_AUTH_SOCK:-/dev/null}:/ssh-agent" \
+    "${ENV_ARGS[@]}" \
+    -e HOME=/home/llm \
+    -e SHELL=/bin/bash \
+    -e SSH_AUTH_SOCK=/ssh-agent \
+    -e TMPDIR=/workspace/.tmp \
+    -e "GIT_SSH_COMMAND=ssh -o UserKnownHostsFile=/home/llm/.ssh/known_hosts -o IdentityAgent=/ssh-agent" \
+    -e "GH_TOKEN=${GH_TOKEN:-}" \
+    --cap-drop ALL \
+    --cap-add SETUID \
+    --cap-add SETGID \
+    --cap-add NET_RAW \
+    --cap-add NET_ADMIN \
+    --security-opt no-new-privileges:false \
+    --tmpfs /tmp \
+    --tmpfs /run \
+    docker-llm-cli sleep infinity
+elif [[ "$(docker container inspect -f '{{.State.Running}}' docker-llm-cli)" != "true" ]]; then
+  echo "Resuming stopped container..."
+  docker start docker-llm-cli
+fi
+
+exec docker exec -it docker-llm-cli /bin/bash --login

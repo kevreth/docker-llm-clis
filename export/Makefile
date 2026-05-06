@@ -2,7 +2,7 @@ IMAGE_NAME := docker-llm-cli
 
 .PHONY: init start stop exec clean
 
-init:
+init: clean
 	./run.sh
 
 start:
