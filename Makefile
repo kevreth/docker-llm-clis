@@ -35,7 +35,9 @@ bld:
 
 all: clean
 	$(MAKE) build DOCKERFILE=Dockerfile.offline
+	$(COMPOSE) down
 	$(MAKE) test
+	$(COMPOSE) up -d
 
 verify-artifacts:
 ifeq ($(DOCKERFILE),Dockerfile.offline)

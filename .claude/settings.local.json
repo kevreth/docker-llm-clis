@@ -49,7 +49,8 @@
       "Bash(echo \"sh exit: $?\")",
       "Read(//home/kev/.local/share/artiary/**)",
       "Read(//home/kev/data/src/**)",
-      "Bash(grep --line-buffered -E \"==>|ERROR|error|DONE|done|Built|fetching|kimi|mistral|playwright|make\\\\[|Leaving|Entering|^$\")"
+      "Bash(grep --line-buffered -E \"==>|ERROR|error|DONE|done|Built|fetching|kimi|mistral|playwright|make\\\\[|Leaving|Entering|^$\")",
+      "Bash(tar xOf *)"
     ]
   }
 }

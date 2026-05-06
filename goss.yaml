@@ -12,31 +12,43 @@ file:
     exists: true
     filetype: file
     mode: "0755"
-  /home/llm/.local/bin/copilot:
-    exists: true
-    filetype: file
-    mode: "0755"
-  /home/llm/.local/bin/kimi:
-    exists: true
-    filetype: symlink
-    mode: "0777"
-  /home/llm/.local/bin/vibe:
-    exists: true
-    filetype: symlink
-    mode: "0777"
-  /opt/npm-global/bin/crush:
-    exists: true
-    filetype: symlink
-    mode: "0777"
   /opt/npm-global/bin/codex:
     exists: true
     filetype: symlink
     mode: "0777"
+  /home/llm/.local/bin/copilot:
+    exists: true
+    filetype: file
+    mode: "0755"
+  /opt/npm-global/bin/crush:
+    exists: true
+    filetype: symlink
+    mode: "0777"
+  /home/llm/.local/bin/factory-droid:
+    exists: true
+    filetype: file
+    mode: "0755"
   /opt/npm-global/bin/gemini:
     exists: true
     filetype: symlink
     mode: "0777"
+  /home/llm/.local/bin/goose:
+    exists: true
+    filetype: file
+    mode: "0755"
+  /opt/npm-global/bin/kilo:
+    exists: true
+    filetype: symlink
+    mode: "0777"
+  /opt/uv-tools/bin/kimi:
+    exists: true
+    filetype: symlink
+    mode: "0777"
   /opt/npm-global/bin/opencode:
+    exists: true
+    filetype: symlink
+    mode: "0777"
+  /opt/uv-tools/bin/vibe:
     exists: true
     filetype: symlink
     mode: "0777"
@@ -61,10 +73,6 @@ file:
   /opt/npm-global/lib/node_modules/@qwen-code/qwen-code/package.json:
     exists: true
     filetype: file
-  /home/llm/.local/bin/goose:
-    exists: true
-    filetype: file
-    mode: "0755"
   /home/llm/.local/bin/jq:
     exists: true
     filetype: file
@@ -73,10 +81,6 @@ file:
     exists: true                                                                                                                                                                         
     filetype: file                                                                                                                                                                       
     mode: "0755"         
-  /home/llm/.local/bin/factory-droid:
-    exists: true
-    filetype: file
-    mode: "0755"
 
 command:
   node --version:
@@ -91,6 +95,16 @@ command:
     exit-status: 0
   sudo --version:
     exit-status: 0
+  python3 tests/test_harness.py opencode:
+    exit-status: 0
+    timeout: 10000
+  python3 tests/test_harness.py kilo:
+    exit-status: 0
+    timeout: 30000
+  jq --version:
+    exit-status: 0
+  yq --version:
+    exit-status: 0
   claude --version:
     exit-status: 0
     timeout: 5000
@@ -100,15 +114,22 @@ command:
   copilot --version:
     exit-status: 0
     timeout: 5000
+  crush --version:
+    exit-status: 0
+    timeout: 5000
   gemini --version:
     exit-status: 0
     timeout: 5000
-  kimi --version:
-    exit-status: 0
-  vibe --version:
+  goose --version:
     exit-status: 0
     timeout: 5000
-  crush --version:
+  factory-droid --version:
+    exit-status: 0
+    timeout: 5000
+  kilo --version:
+    exit-status: 0
+    timeout: 5000
+  kimi --version:
     exit-status: 0
     timeout: 5000
   opencode --version:
@@ -117,19 +138,6 @@ command:
   qwen --version:
     exit-status: 0
     timeout: 5000
-  goose --version:
+  vibe --version:
     exit-status: 0
     timeout: 5000
-  jq --version:
-    exit-status: 0
-  yq --version:
-    exit-status: 0
-  factory-droid --version:
-    exit-status: 0
-    timeout: 5000
-  python3 tests/test_harness.py opencode:
-    exit-status: 0
-    timeout: 10000
-  python3 tests/test_harness.py kilo:
-    exit-status: 0
-    timeout: 30000

@@ -11,7 +11,7 @@ ARG KIMI_VERSION=1.41.0
 ARG MISTRAL_VERSION=2.7.6
 
 ENV DEBIAN_FRONTEND=noninteractive
-ENV PATH="/home/${CONTAINER_USER}/.local/bin:$PATH"
+ENV PATH="/opt/uv-tools/bin:/home/${CONTAINER_USER}/.local/bin:$PATH"
 ENV YARN_VERSION=${YARN_VERSION}
 
 COPY versions.yml /tmp/versions.yml
@@ -33,6 +33,9 @@ RUN usermod -l ${CONTAINER_USER} node && \
     usermod -d /home/${CONTAINER_USER} -m ${CONTAINER_USER}
 
 # Scripts (online — direct download)
+RUN mkdir -p /opt/uv-tools && chown ${CONTAINER_USER}:${CONTAINER_USER} /opt/uv-tools
+ENV UV_TOOL_DIR=/opt/uv-tools
+ENV UV_TOOL_BIN_DIR=/opt/uv-tools/bin
 RUN mkdir -p /home/${CONTAINER_USER}/.local/bin && \
     curl -fsSL "https://downloads.claude.ai/claude-code-releases/${CLAUDE_VERSION}/linux-x64/claude" \
       -o /home/${CONTAINER_USER}/.local/bin/claude && \
@@ -59,8 +62,8 @@ RUN uv tool install --python 3.13 "kimi-cli==${KIMI_VERSION}" && \
 
 USER root
 RUN mkdir -p /workspace /artifacts /home/${CONTAINER_USER}/.ssh
-RUN chown -R ${CONTAINER_USER}:${CONTAINER_USER} /workspace /artifacts /home/${CONTAINER_USER} /opt/npm-global
-RUN echo 'export PATH="$HOME/.local/bin:$PATH"' >> /home/${CONTAINER_USER}/.bashrc
+RUN chown -R ${CONTAINER_USER}:${CONTAINER_USER} /workspace /artifacts /home/${CONTAINER_USER} /opt/npm-global /opt/uv-tools
+RUN echo 'export PATH="/opt/uv-tools/bin:$HOME/.local/bin:$PATH"' >> /home/${CONTAINER_USER}/.bashrc
 RUN usermod -aG sudo ${CONTAINER_USER}
 RUN mkdir -p /etc/sudoers.d && \
     echo "${CONTAINER_USER} ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/${CONTAINER_USER} && chmod 0440 /etc/sudoers.d/${CONTAINER_USER}
