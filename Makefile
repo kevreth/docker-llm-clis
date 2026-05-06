@@ -91,7 +91,7 @@ export:
 test:
 	@which dgoss >/dev/null 2>&1 || { echo "ERROR: dgoss not found. Install: https://github.com/goss-org/goss" ; exit 1; }
 	@docker image inspect $(IMAGE_NAME) >/dev/null 2>&1 || { echo "ERROR: image '$(IMAGE_NAME)' not found. Run 'make build' first." ; exit 1; }
-	dgoss run --user 1000:1000 -e HOME=/home/llm $(IMAGE_NAME) tail -f /dev/null
+	dgoss run --user 1000:1000 -e HOME=/home/llm -e SKIP_SEED=1 $(IMAGE_NAME) tail -f /dev/null
 
 check-sync:
 	@echo "Checking common sections are in sync..."
