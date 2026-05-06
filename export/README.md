@@ -79,6 +79,8 @@ Additional optional integrations supported by the env file include:
 | `make start` | Start a stopped container and attach a shell |
 | `make stop` | Stop the running container |
 | `make exec` | Open an additional shell in a running container |
+| `make status` | Show container status |
+| `make clean` | Stop and remove the container, image, and prune Docker system |
 
 On first use, run `make init`. On subsequent uses, run `make exec` to open a second shell. If you stop your container or reboot use `make start` to resume.
 

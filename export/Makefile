@@ -1,14 +1,25 @@
-.PHONY: init start stop exec
+IMAGE_NAME := docker-llm-cli
+
+.PHONY: init start stop exec clean
 
 init:
 	./run.sh
 
 start:
-	docker start docker-llm-cli
-	docker exec -it docker-llm-cli bash
+	docker start $(IMAGE_NAME)
+	$(make) exec
 
 stop:
-	docker stop docker-llm-cli
+	docker stop $(IMAGE_NAME)
 
 exec:
-	docker exec -it docker-llm-cli bash
+	docker exec -it $(IMAGE_NAME) bash
+
+clean:
+	docker stop $(IMAGE_NAME) 2>/dev/null || true
+	docker rm $(IMAGE_NAME) 2>/dev/null || true
+	docker rmi -f $(IMAGE_NAME) 2>/dev/null || true
+	docker system prune -af || true
+	
+status:
+	docker container ls -f name=$(IMAGE_NAME)
