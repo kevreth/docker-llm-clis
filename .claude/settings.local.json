@@ -44,7 +44,9 @@
       "Bash(rm -rf /home/kev/.cache/uv)",
       "Bash(pip cache *)",
       "Bash(rm -rf /home/kev/.cache/pip)",
-      "Bash(dgoss run *)"
+      "Bash(dgoss run *)",
+      "Bash(echo \"exit: $?\")",
+      "Bash(echo \"sh exit: $?\")"
     ]
   }
 }

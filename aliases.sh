@@ -1,4 +1,5 @@
 export PATH="/opt/npm-global/bin:$PATH"
+export PYTHONPYCACHEPREFIX="$HOME/.cache/python/"
 alias claude='CLAUDE_YOLO=1 claude --allow-dangerously-skip-permissions '
 alias codex='codex --dangerously-bypass-approvals-and-sandbox '
 alias copilot='copilot --yolo '

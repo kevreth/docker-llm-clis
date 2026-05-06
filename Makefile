@@ -30,11 +30,10 @@ clean:
 	docker rmi -f $(IMAGE_NAME) 2>/dev/null || true
 	docker system prune -af || true
 
-all:
-	docker stop $(IMAGE_NAME) 2>/dev/null || true
-	docker rm $(IMAGE_NAME) 2>/dev/null || true
-	docker rmi -f $(IMAGE_NAME) 2>/dev/null || true
-	docker system prune -af || true
+bld:
+	$(MAKE) build DOCKERFILE=Dockerfile.offline
+
+all: clean
 	$(MAKE) build DOCKERFILE=Dockerfile.offline
 	$(MAKE) test
 

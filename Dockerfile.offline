@@ -86,6 +86,10 @@ RUN sed -i 's/^Defaults.*requiretty/# Defaults requiretty/' /etc/sudoers || true
 RUN echo "Defaults !audit" > /etc/sudoers.d/no-audit && chmod 0440 /etc/sudoers.d/no-audit
 COPY aliases.sh /etc/profile.d/aliases.sh
 COPY motd /etc/motd
+RUN mkdir ~/.claude/
+RUN mkdir -p ~/.config/kilo
+COPY config/kilo.jsonc ~/.config/kilo
+COPY config/settings.json ~/.claude
 RUN echo "source /etc/profile.d/aliases.sh" >> /etc/bash.bashrc
 RUN echo "source /etc/profile.d/aliases.sh" >> /home/${CONTAINER_USER}/.bashrc && \
     echo "cat /etc/motd" >> /home/${CONTAINER_USER}/.bashrc && \

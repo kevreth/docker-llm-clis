@@ -22,6 +22,9 @@ services:
 
     container_name: docker-llm-cli
 
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
     volumes:
       - ${WORKSPACE_DIR:?WORKSPACE_DIR must be set}:/workspace
       - docker-llm-cli-artifacts:/artifacts
@@ -38,7 +41,9 @@ services:
       SHELL: /bin/bash
       GIT_SSH_COMMAND: ssh -o UserKnownHostsFile=/home/llm/.ssh/known_hosts -o IdentityAgent=/ssh-agent
       TERM: xterm-256color
-
+      OLLAMA_HOST: ${OLLAMA_HOST:-http://host.docker.internal:11434}
+      OLLAMA_EMBED_MODEL: ${OLLAMA_EMBED_MODEL:-qwen3-embedding:4b-q4_K_M}
+      
     stdin_open: true
     tty: true
     init: true
