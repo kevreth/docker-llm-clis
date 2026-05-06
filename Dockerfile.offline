@@ -64,9 +64,14 @@ RUN mkdir -p "$HOME/.local/bin" && \
         esac; \
     done && \
     rm -rf /tmp/scripts && \
-    awk '/^scripts:$/{f=1;next} f&&/^  [a-z]/&&!/^    /{if(name&&art)print name"\t"art; name=substr($0,3);sub(/:$/,"",name);art="";next} f&&name&&/^    artifact:/{art=$2;gsub(/"/,"",art);next} f&&/^[a-zA-Z]/{if(name&&art)print name"\t"art; name="";exit} END{if(f&&name&&art)print name"\t"art}' /tmp/versions.yml \
-    | while read -r name art; do \
-        tgz="/tmp/builders/${name}/${art}"; \
+    awk '/^scripts:$/{f=1;next} f&&/^  [a-z]/&&!/^    /{if(name&&art)print name"\t"art"\t"ver; name=substr($0,3);sub(/:$/,"",name);art="";ver="";next} f&&name&&/^    artifact:/{art=$2;gsub(/"/,"",art);next} f&&name&&/^    version:/{ver=$2;gsub(/"/,"",ver);next} f&&/^[a-zA-Z]/{if(name&&art)print name"\t"art"\t"ver; name="";exit} END{if(f&&name&&art)print name"\t"art"\t"ver}' /tmp/versions.yml \
+    | while read -r name art ver; do \
+        base="${art%%.*}"; ext="${art#${base}}"; \
+        if [ -n "$ver" ] && [ "$ver" != "null" ]; then \
+            tgz="/tmp/builders/${name}/${base}-${ver}${ext}"; \
+        else \
+            tgz="/tmp/builders/${name}/${art}"; \
+        fi; \
         dir="${art%.tar.gz}"; dir="${dir%.tgz}"; \
         [ -f "$tgz" ] || { echo "ERROR: missing artifact: $tgz" >&2; exit 1; }; \
         tar xzf "$tgz" -C /tmp && \

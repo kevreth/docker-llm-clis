@@ -46,7 +46,10 @@
       "Bash(rm -rf /home/kev/.cache/pip)",
       "Bash(dgoss run *)",
       "Bash(echo \"exit: $?\")",
-      "Bash(echo \"sh exit: $?\")"
+      "Bash(echo \"sh exit: $?\")",
+      "Read(//home/kev/.local/share/artiary/**)",
+      "Read(//home/kev/data/src/**)",
+      "Bash(grep --line-buffered -E \"==>|ERROR|error|DONE|done|Built|fetching|kimi|mistral|playwright|make\\\\[|Leaving|Entering|^$\")"
     ]
   }
 }
