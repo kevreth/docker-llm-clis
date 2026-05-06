@@ -1,6 +1,6 @@
 # Exported Container Runtime Requirements
 
-This directory contains the files needed to start the exported `docker-llm-cli` container with `./run.sh`.
+This directory contains the files needed to run the exported `docker-llm-cli` container. The container is persistent — it survives exits and can be restarted without losing state.
 
 ## Prerequisites
 
@@ -66,13 +66,30 @@ Additional optional integrations supported by the env file include:
 
 ## Runtime Notes
 
-- `run.sh` starts the container with `docker run`.
 - The host `WORKSPACE_DIR` is bind-mounted to `/workspace`.
-- Docker named volumes are used for `/artifacts` and `/home/llm`.
+- Docker named volumes are used for `/artifacts` and `/home/llm`, so data persists across restarts.
 - If `SSH_AUTH_SOCK` is available on the host, it is mounted for git/SSH usage inside the container.
+- The container is not removed on exit. Use `make stop` / `make start` to pause and resume.
 
-## Start
+## Usage
+
+| Command | Description |
+|---|---|
+| `make init` | Create and enter the container for the first time |
+| `make start` | Start a stopped container and attach a shell |
+| `make stop` | Stop the running container |
+| `make exec` | Open an additional shell in a running container |
+
+On first use, run `make init`. On subsequent uses, run `make exec` to open a second shell. If you stop your container or reboot use `make start` to resume.
+
+To permanently remove the container (e.g. to re-initialize with updated settings):
 
 ```bash
-./run.sh
+docker rm docker-llm-cli
 ```
+
+## IMPORTANT
+
+For maximum convenience it's recommended to add an alias to start a session from anywhere if the container is running:
+
+alias clis='docker exec -it docker-llm-cli bash' 
