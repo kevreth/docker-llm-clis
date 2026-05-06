@@ -83,6 +83,7 @@ file:
     mode: "0755"         
 
 command:
+  # test presence of extra tools
   node --version:
     exit-status: 0
   npm --version:
@@ -95,16 +96,11 @@ command:
     exit-status: 0
   sudo --version:
     exit-status: 0
-  python3 tests/test_harness.py opencode:
-    exit-status: 0
-    timeout: 10000
-  python3 tests/test_harness.py kilo:
-    exit-status: 0
-    timeout: 30000
   jq --version:
     exit-status: 0
   yq --version:
     exit-status: 0
+  # test harnesses
   claude --version:
     exit-status: 0
     timeout: 5000
@@ -141,3 +137,10 @@ command:
   vibe --version:
     exit-status: 0
     timeout: 5000
+  #functional tests
+  python3 tests/test_harness.py opencode:
+    exit-status: 0
+    timeout: 10000
+  python3 tests/test_harness.py kilo:
+    exit-status: 0
+    timeout: 30000
