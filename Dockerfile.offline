@@ -5,6 +5,7 @@ FROM ${NODE_IMAGE}
 ARG CONTAINER_USER=llm
 ENV DEBIAN_FRONTEND=noninteractive
 ENV PATH="/opt/uv-tools/bin:/home/${CONTAINER_USER}/.local/bin:$PATH"
+ENV PLAYWRIGHT_BROWSERS_PATH=/opt/playwright-browsers
 
 COPY --from=artiary_data versions.yml /tmp/versions.yml
 COPY --from=artiary_artifacts . /tmp/artifacts/
@@ -29,7 +30,7 @@ USER root
 RUN usermod -l ${CONTAINER_USER} node && \
     groupmod -n ${CONTAINER_USER} node && \
     usermod -d /home/${CONTAINER_USER} -m ${CONTAINER_USER}
-RUN mkdir -p /opt/uv-tools && chown ${CONTAINER_USER}:${CONTAINER_USER} /opt/uv-tools
+RUN mkdir -p /opt/uv-tools /opt/playwright-browsers && chown ${CONTAINER_USER}:${CONTAINER_USER} /opt/uv-tools /opt/playwright-browsers
 ENV UV_TOOL_DIR=/opt/uv-tools
 ENV UV_TOOL_BIN_DIR=/opt/uv-tools/bin
 
@@ -84,8 +85,8 @@ RUN mkdir -p "$HOME/.local/bin" && \
     rm -rf /tmp/builders
 
 USER root
-RUN mkdir -p /workspace /artifacts /home/${CONTAINER_USER}/.ssh
-RUN chown -R ${CONTAINER_USER}:${CONTAINER_USER} /workspace /artifacts /home/${CONTAINER_USER} /opt/npm-global /opt/uv-tools
+RUN mkdir -p /workspace /artifacts /home/${CONTAINER_USER}/.ssh /opt/playwright-browsers
+RUN chown -R ${CONTAINER_USER}:${CONTAINER_USER} /workspace /artifacts /home/${CONTAINER_USER} /opt/npm-global /opt/uv-tools /opt/playwright-browsers
 RUN echo 'export PATH="/opt/uv-tools/bin:$HOME/.local/bin:$PATH"' >> /home/${CONTAINER_USER}/.bashrc
 RUN usermod -aG sudo ${CONTAINER_USER}
 RUN mkdir -p /etc/sudoers.d && \

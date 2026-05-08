@@ -48,6 +48,13 @@ file:
     exists: true
     filetype: symlink
     mode: "0777"
+  /opt/npm-global/bin/playwright:
+    exists: true
+    filetype: symlink
+    mode: "0777"
+  /opt/playwright-browsers:
+    exists: true
+    filetype: directory
   /opt/uv-tools/bin/vibe:
     exists: true
     filetype: symlink
@@ -84,6 +91,9 @@ file:
 
 command:
   # test presence of extra tools
+  playwright --version:
+    exit-status: 0
+    timeout: 5000
   node --version:
     exit-status: 0
   npm --version:

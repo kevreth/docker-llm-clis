@@ -14,7 +14,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 ENV PATH="/opt/uv-tools/bin:/home/${CONTAINER_USER}/.local/bin:$PATH"
 ENV YARN_VERSION=${YARN_VERSION}
 
-COPY versions.yml /tmp/versions.yml
+COPY --from=artiary_artifacts manifest/versions.yml /tmp/versions.yml
 
 # APT packages (online — fetch from Debian repos)
 RUN apt-get update -qq && \
@@ -26,6 +26,11 @@ RUN apt-get update -qq && \
 RUN npm install -g --prefix /opt/npm-global \
       $(awk '/^npm:/{f=1;next} f&&/^[a-zA-Z]/{exit} f{sub(/^  /,"");gsub(/^"|"$/,"");gsub(/": "/,"@");print}' /tmp/versions.yml)
 ENV PATH="/opt/npm-global/bin:$PATH"
+
+# Playwright browsers (online — download from playwright CDN)
+ENV PLAYWRIGHT_BROWSERS_PATH=/opt/playwright-browsers
+RUN mkdir -p /opt/playwright-browsers && \
+    PLAYWRIGHT_SKIP_VALIDATE_HOST_REQUIREMENTS=1 playwright install chromium
 
 USER root
 RUN usermod -l ${CONTAINER_USER} node && \
@@ -61,8 +66,8 @@ RUN uv tool install --python 3.13 "kimi-cli==${KIMI_VERSION}" && \
     uv tool install --python 3.13 "mistral-vibe==${MISTRAL_VERSION}"
 
 USER root
-RUN mkdir -p /workspace /artifacts /home/${CONTAINER_USER}/.ssh
-RUN chown -R ${CONTAINER_USER}:${CONTAINER_USER} /workspace /artifacts /home/${CONTAINER_USER} /opt/npm-global /opt/uv-tools
+RUN mkdir -p /workspace /artifacts /home/${CONTAINER_USER}/.ssh /opt/playwright-browsers
+RUN chown -R ${CONTAINER_USER}:${CONTAINER_USER} /workspace /artifacts /home/${CONTAINER_USER} /opt/npm-global /opt/uv-tools /opt/playwright-browsers
 RUN echo 'export PATH="/opt/uv-tools/bin:$HOME/.local/bin:$PATH"' >> /home/${CONTAINER_USER}/.bashrc
 RUN usermod -aG sudo ${CONTAINER_USER}
 RUN mkdir -p /etc/sudoers.d && \
@@ -71,12 +76,23 @@ RUN sed -i 's/^Defaults.*requiretty/# Defaults requiretty/' /etc/sudoers || true
 RUN echo "Defaults !audit" > /etc/sudoers.d/no-audit && chmod 0440 /etc/sudoers.d/no-audit
 COPY aliases.sh /etc/profile.d/aliases.sh
 COPY motd /etc/motd
+RUN mkdir ~/.claude/
+RUN mkdir -p ~/.config/kilo
+COPY config/kilo.jsonc ~/.config/kilo
+COPY config/settings.json ~/.claude
 RUN echo "source /etc/profile.d/aliases.sh" >> /etc/bash.bashrc
 RUN echo "source /etc/profile.d/aliases.sh" >> /home/${CONTAINER_USER}/.bashrc && \
     echo "cat /etc/motd" >> /home/${CONTAINER_USER}/.bashrc && \
     rm /tmp/versions.yml
 RUN cp -a /home/${CONTAINER_USER}/. /home/${CONTAINER_USER}.seed/
+RUN sudo ln -s /usr/bin/fdfind /usr/local/bin/fd
+# Prevent CLIs from opening text web browsers for authentication, which they cannot complete.
+# alias.sh allows them to be called normally.
+RUN mv /usr/bin/links /usr/bin/lnks && mv /usr/bin/links2 /usr/bin/lnks2 && mv /usr/bin/lynx /usr/bin/lyx
+
+COPY tests/ /tests/
+RUN chmod -R 755 /tests/
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
-RUN chmod +x /usr/local/bin/entrypoint.sh
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+# RUN chmod +x /usr/local/bin/entrypoint.sh
 CMD ["/bin/bash", "-l"]

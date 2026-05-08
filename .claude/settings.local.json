@@ -50,7 +50,13 @@
       "Read(//home/kev/.local/share/artiary/**)",
       "Read(//home/kev/data/src/**)",
       "Bash(grep --line-buffered -E \"==>|ERROR|error|DONE|done|Built|fetching|kimi|mistral|playwright|make\\\\[|Leaving|Entering|^$\")",
-      "Bash(tar xOf *)"
+      "Bash(tar xOf *)",
+      "Bash(file /tmp/artiary-update-cache/*.cache)",
+      "Bash(python3 *)",
+      "Bash(uv run *)",
+      "Bash(make verify-artifacts *)",
+      "Bash(make check-sync *)",
+      "Bash(git add *)"
     ]
   }
 }

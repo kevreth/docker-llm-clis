@@ -11,7 +11,7 @@ BUNDLE_DIR    := $(BUNDLE_NAME)
 BUNDLE_TAR    := $(BUNDLE_NAME).tar.gz
 
 # Versions read from local versions.yml (self-contained)
-VERSIONS_FILE := $(if $(filter $(DOCKERFILE),Dockerfile.offline),$(ARTIARY_DATA_DIR)/versions.yml,versions.yml)
+VERSIONS_FILE := $(if $(filter $(DOCKERFILE),Dockerfile.offline),$(ARTIARY_DATA_DIR)/versions.yml,$(MANIFEST))
 _BASE_SLUG    := $(shell yq '.image.base' $(VERSIONS_FILE) 2>/dev/null | tr -d '"' | tr ':' '-')
 _VER_SLUG     := $(shell yq '.image.version // ""' $(VERSIONS_FILE) 2>/dev/null | tr -d '"' | sed 's/^sha256://')
 NODE_TAR      := $(ARTIFACTS)/images/$(_BASE_SLUG)$(if $(_VER_SLUG),-$(_VER_SLUG),).tar
@@ -40,6 +40,8 @@ all: clean
 	$(COMPOSE) up -d
 
 verify-artifacts:
+	@test -f $(MANIFEST) || \
+	    (echo "ERROR: $(MANIFEST) missing - run 'make fetch' in artiary first" && exit 1)
 ifeq ($(DOCKERFILE),Dockerfile.offline)
 	@test -f $(VERSIONS_FILE) || \
 	    (echo "ERROR: $(VERSIONS_FILE) missing - run 'make resolve' in artiary first" && exit 1)
