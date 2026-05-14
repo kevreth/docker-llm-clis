@@ -2,6 +2,7 @@ export PATH="/opt/npm-global/bin:$PATH"
 export PYTHONPYCACHEPREFIX="$HOME/.cache/python/"
 alias claude='CLAUDE_YOLO=1 claude --allow-dangerously-skip-permissions '
 alias codex='codex --dangerously-bypass-approvals-and-sandbox '
+alias commit='claude "Create a detailed commit message and execute the commit. Ignore untracked files. Do not add a co-authoring self-reference statement."'
 alias copilot='copilot --yolo '
 alias crush='crush --yolo '
 alias droid='factory-droid '
