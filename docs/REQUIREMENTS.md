@@ -1,10 +1,12 @@
+---
+title: "Product Requirements Document: docker-llm-cli"
+---
+
 # Product Requirements Document: docker-llm-cli
 
 > **Status**: Active  
 > **Scope**: `docker/` repository only — self-contained container distribution of LLM CLI tools  
 > **Audience**: Engineers extending the image, adding harnesses, or modifying the build/test pipeline
-
----
 
 ## 1. Overview
 

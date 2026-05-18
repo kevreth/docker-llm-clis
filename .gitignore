@@ -3,3 +3,5 @@ artifacts/*
 !artifacts/.gitkeep
 *.swp
 *.tar.gz
+
+.codegraph/

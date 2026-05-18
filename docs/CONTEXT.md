@@ -1,9 +1,11 @@
+---
+title: "Docker — Current Context"
+---
+
 # Docker — Current Context
 
 > **Scope**: `docker/` repository only. This directory is self-contained and no longer references sibling directories.  
 > **Last updated**: 2026-05-03
-
----
 
 ## 1. Purpose
 
