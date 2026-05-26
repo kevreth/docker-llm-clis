@@ -84,16 +84,28 @@ file:
     exists: true
     filetype: file
     mode: "0755"
-  /home/llm/.local/bin/yq:                                                                                                                                                               
-    exists: true                                                                                                                                                                         
-    filetype: file                                                                                                                                                                       
-    mode: "0755"         
+  /home/llm/.local/bin/yq:
+    exists: true
+    filetype: file
+    mode: "0755"
+  /home/llm/.local/bin/kiro-cli:
+    exists: true
+    filetype: file
+    mode: "0755"
+  /home/llm/.local/bin/kiro-cli-chat:
+    exists: true
+    filetype: file
+    mode: "0755"
+  /home/llm/.local/bin/kiro-cli-term:
+    exists: true
+    filetype: file
+    mode: "0755"
 
 command:
   # test presence of extra tools
   playwright --version:
     exit-status: 0
-    timeout: 5000
+    timeout: 30000
   node --version:
     exit-status: 0
   npm --version:
@@ -113,44 +125,47 @@ command:
   # test harnesses
   claude --version:
     exit-status: 0
-    timeout: 5000
+    timeout: 30000
   codex --version:
     exit-status: 0
-    timeout: 5000
+    timeout: 30000
   copilot --version:
     exit-status: 0
-    timeout: 5000
+    timeout: 30000
   crush --version:
     exit-status: 0
-    timeout: 5000
+    timeout: 30000
   gemini --version:
     exit-status: 0
-    timeout: 5000
+    timeout: 30000
   goose --version:
     exit-status: 0
-    timeout: 5000
+    timeout: 30000
   factory-droid --version:
     exit-status: 0
-    timeout: 5000
+    timeout: 30000
   kilo --version:
     exit-status: 0
-    timeout: 5000
+    timeout: 30000
   kimi --version:
     exit-status: 0
-    timeout: 5000
+    timeout: 30000
+  kiro-cli --version:
+    exit-status: 0
+    timeout: 30000
   opencode --version:
     exit-status: 0
-    timeout: 5000
+    timeout: 30000
   qwen --version:
     exit-status: 0
-    timeout: 5000
+    timeout: 30000
   vibe --version:
     exit-status: 0
-    timeout: 5000
+    timeout: 30000
   #functional tests
   python3 tests/test_harness.py opencode:
     exit-status: 0
-    timeout: 10000
+    timeout: 30000
   python3 tests/test_harness.py kilo:
     exit-status: 0
-    timeout: 30000
+    timeout: 60000

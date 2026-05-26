@@ -27,6 +27,7 @@ services:
 
     volumes:
       - ${WORKSPACE_DIR:?WORKSPACE_DIR must be set}:/workspace
+      - /media:/media
       - docker-llm-cli-artifacts:/artifacts
       - docker-llm-cli-home:/home/llm
       - ${SSH_AUTH_SOCK}:/ssh-agent

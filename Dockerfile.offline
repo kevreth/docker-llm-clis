@@ -76,10 +76,14 @@ RUN mkdir -p "$HOME/.local/bin" && \
         else \
             tgz="/tmp/builders/${name}/${art}"; \
         fi; \
-        dir="${art%.tar.gz}"; dir="${dir%.tgz}"; \
+        dir="${art%.tar.gz}"; dir="${dir%.tgz}"; dir="${dir%.tar.xz}"; dir="${dir%.tar.zst}"; dir="${dir%.tar.bz2}"; \
         [ -f "$tgz" ] || { echo "ERROR: missing artifact: $tgz" >&2; exit 1; }; \
-        tar xzf "$tgz" -C /tmp && \
-        bash "/tmp/${dir}/install.sh" && \
+        tar xf "$tgz" -C /tmp && \
+        if [ -f "/tmp/${dir}/install.sh" ]; then \
+            bash "/tmp/${dir}/install.sh"; \
+        else \
+            find "/tmp/${dir}" -type f | xargs -I{} install -m 755 {} "$HOME/.local/bin/"; \
+        fi && \
         rm -rf "/tmp/${dir}"; \
     done && \
     rm -rf /tmp/builders
