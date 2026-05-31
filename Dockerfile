@@ -83,6 +83,7 @@ COPY config/settings.json ~/.claude
 RUN echo "source /etc/profile.d/aliases.sh" >> /etc/bash.bashrc
 RUN echo "source /etc/profile.d/aliases.sh" >> /home/${CONTAINER_USER}/.bashrc && \
     echo "cat /etc/motd" >> /home/${CONTAINER_USER}/.bashrc && \
+    echo '[ -f "$HOME/.user.env" ] && source "$HOME/.user.env"' >> /home/${CONTAINER_USER}/.bashrc && \
     rm /tmp/versions.yml
 RUN cp -a /home/${CONTAINER_USER}/. /home/${CONTAINER_USER}.seed/
 RUN sudo ln -s /usr/bin/fdfind /usr/local/bin/fd
