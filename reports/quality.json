@@ -1,5 +1,5 @@
 {
-  "generated": "2026-06-03T14:19:40.865558+00:00",
+  "generated": "2026-06-03T14:27:56.574625+00:00",
   "stack": "python",
   "checks": {
     "lint": {
@@ -35,7 +35,7 @@
     },
     "complexity": {
       "tool": "radon",
-      "status": "warn",
+      "status": "pass",
       "worst_rank": "D",
       "violations": 1,
       "report": "reports/complexity.json"
@@ -50,12 +50,12 @@
     }
   },
   "acis": {
-    "status": "ok",
+    "status": "outdated",
     "avg_risk_score": 0.3032,
     "high_risk_files": 1,
     "security_findings": null,
     "analyzed_at": "2026-06-03",
-    "days_behind": null
+    "days_behind": 0
   },
   "overall": "warn",
   "findings": {
