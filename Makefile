@@ -4,6 +4,7 @@ SRC_DIR   := .
 TESTS_DIR := tests
 QUALITY_MK := /workspace/dashboard/tools/quality.mk
 CHECKS_MK  := /workspace/dashboard/tools/checks.mk
+TOOL_CONFIG := /workspace/dashboard/tools/pyproject-tool-config.toml
 SEEDS_FILE := /workspace/autonomous-capital/harness/seeds/internal/repos.txt
 SERVE_DEFINED := 1
 include $(QUALITY_MK)
