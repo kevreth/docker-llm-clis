@@ -5,3 +5,8 @@ artifacts/*
 *.tar.gz
 
 .codegraph/
+
+# Quality and analysis artifacts
+.acis/
+.coverage
+reports/
