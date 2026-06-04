@@ -10,3 +10,5 @@ artifacts/*
 .acis/
 .coverage
 reports/
+
+.venv/
