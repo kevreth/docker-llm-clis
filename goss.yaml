@@ -12,6 +12,10 @@ file:
     exists: true
     filetype: file
     mode: "0755"
+  /opt/npm-global/bin/cypress:
+    exists: true
+    filetype: symlink
+    mode: "0777"
   /opt/npm-global/bin/codex:
     exists: true
     filetype: symlink
@@ -123,6 +127,9 @@ command:
   yq --version:
     exit-status: 0
   # test harnesses
+  cypress --version:
+    exit-status: 0
+    timeout: 30000
   claude --version:
     exit-status: 0
     timeout: 30000
