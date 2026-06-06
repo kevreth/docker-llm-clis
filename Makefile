@@ -1,4 +1,4 @@
-.PHONY: quality lint-ruff lint-mypy lint-complexity audit-deps init
+.PHONY: quality lint-ruff lint-mypy lint-complexity audit-deps
 
 SRC_DIR   := .
 TESTS_DIR := tests
@@ -9,9 +9,6 @@ SEEDS_FILE := /workspace/autonomous-capital/harness/seeds/internal/repos.txt
 SERVE_DEFINED := 1
 include $(QUALITY_MK)
 include $(CHECKS_MK)
-
-init: ## Register this repo in harness seeds file
-	grep -qxF "$(CURDIR)" $(SEEDS_FILE) || echo "$(CURDIR)" >> $(SEEDS_FILE)
 
 DOCKERFILE    ?= Dockerfile
 ARTIARY_DATA_DIR ?= $(HOME)/.local/share/artiary

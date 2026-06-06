@@ -1,9 +1,6 @@
 IMAGE_NAME := docker-llm-cli
 
-.PHONY: init start stop exec clean
-
-init: clean
-	./run.sh
+.PHONY: start stop exec clean
 
 start:
 	docker start $(IMAGE_NAME)
