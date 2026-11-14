@@ -34,3 +34,6 @@ ignore = ["tests/test_harness.py"]
 
 [tool.coverage.report]
 fail_under = 0
+
+[tool.radon]
+exclude = ["tools/*"]
